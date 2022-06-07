@@ -12,9 +12,9 @@ function readlines64(path::String)
 end
 
 function main()
-	# first part
 	lines = readlines64("firstProblemNumbers.txt")
-	# println("Answer for first part is $(getIncreases(lines))")
+	# first part
+	println("Answer for first part is $(getIncreases(lines))")
 
 	# second part -- notice that a window is larger than the previous if and only if the first value of 
 	# the previous window is smaller than the last value of the next window. This is true when 
