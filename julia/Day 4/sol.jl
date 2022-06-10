@@ -5,8 +5,6 @@ readGrid(lines::Vector{String}) = [readFromLine(line) for line in lines]
 readGrids(lines::Vector{String}) = [readGrid(lines[5*i-4:5*i]) for i in 1:(Int64((length(lines))/5))]
 
 function readInput(path::String)
-	# lines = readlines(path)
-	# filter!(x->x!="", lines)
 	lines = filter(x->x!="", readlines(path))
 	return [parse(Int64, val) for val in split(lines[1], ",")], readGrids(lines[2:length(lines)])
 end
