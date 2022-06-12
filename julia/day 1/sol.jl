@@ -20,7 +20,6 @@ function main()
 	# the previous window is smaller than the last value of the next window. This is true when 
 	# a[i+3]>a[i] for some i and vector a
 	println("Answer for first part is $(getSumIncreases(lines))")
-
 end
 
 main()

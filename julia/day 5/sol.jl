@@ -1,3 +1,5 @@
+using StatsBase
+
 function readInput(path::String)
 	lines = [vcat([String(val) for val in split(line, " -> ")]) for line in readlines(path)]
 	lines = [string(line[1], ",", line[2]) for line in lines]
@@ -22,11 +24,6 @@ function findDiag(vals::Vector{Int64})
 	end
 end
 
-# function findRec(vals::Vector{Int64})
-# 	if vals[1] == vals[3] return [(vals[1], val) for val in getVec(vals[2], vals[4])] end
-# 	if vals[2] == vals[4] return [(val, vals[2]) for val in getVec(vals[1], vals[3])] end
-# end
-
 function findRec(vals::Vector{Int64})
 	if vals[1] == vals[3] return [(vals[1], val) for val in union(vals[2]:vals[4], vals[4]:vals[2])] end
 	if vals[2] == vals[4] return [(val, vals[2]) for val in union(vals[1]:vals[3], vals[3]:vals[1])] end
@@ -39,19 +36,16 @@ function main()
 	horiVerti = filter(x->isParr(x), lines)
 	locations = []
 	for vec in horiVerti for tuple in findRec(vec) push!(locations, tuple) end end
-	uniq = unique(locations)
-	counts = Dict([(i,count(x->x==i,locations)) for i in uniq])
-	nums = length([val[1] for val in counts if val[2]>=2])
+	nums = length([key for (key, val) in countmap(locations) if val>=2])
 	println("Answer for first part: $(nums)")
 
 	# Second part
 	diagVecs = filter(x->diag(x), lines)
 	diagLoc = []
 	for vec in diagVecs for tuple in findDiag(vec) push!(diagLoc, tuple) end end
-	uniqDiag = unique(diagLoc)
-	countsDiag = Dict([(i,count(x->x==i,diagLoc)) for i in uniqDiag])
-	newCounts = merge(+, countsDiag, counts)
-	println("Answer for second part: $(length([val[1] for val in newCounts if val[2]>=2]))")
+	locations = vcat(locations, diagLoc)
+	nums = length([key for (key, val) in countmap(locations) if val>=2])
+	println("Answer for second part: $(nums)")
 end
 
 main()
