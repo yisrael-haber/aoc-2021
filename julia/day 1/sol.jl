@@ -1,15 +1,8 @@
-function getIncreases(veccy::Vector{Int64})
-	return length([true for i in 1:(length(veccy) - 1) if veccy[i]<veccy[i+1]])
-end
+getIncreases(veccy::Vector{Int64}) = length([true for i in 1:(length(veccy) - 1) if veccy[i]<veccy[i+1]])
 
-function getSumIncreases(veccy::Vector{Int64})
-	return length([true for i in 1:(length(veccy) - 3) if veccy[i]<veccy[i+3]])
-end
+getSumIncreases(veccy::Vector{Int64}) = length([true for i in 1:(length(veccy) - 3) if veccy[i]<veccy[i+3]])
 
-function readlines64(path::String)
-	lines = readlines(path)
-	return [parse(Int64, str) for str in lines]
-end
+readlines64(path::String) = [parse(Int64, str) for str in readlines(path)]
 
 function main()
 	lines = readlines64("firstProblemNumbers.txt")
