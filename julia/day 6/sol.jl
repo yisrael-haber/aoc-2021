@@ -1,5 +1,7 @@
 using StatsBase
 
+dictSum(dictToSum::Dict{Int64, Int64}) = sum([val for (key,val) in dictToSum])
+
 readInput(path::String) = [parse(Int64, val) for val in split(readlines(path)[1],",")]
 
 function operation(veccy::Vector{Int64})
@@ -27,9 +29,7 @@ function partTwoSingle(vals::Dict{Int64, Int64})
 			newDictMap[6] += val
 			newDictMap[8] += val
 		end
-		if key!= 0
-			newDictMap[key - 1] += val
-		end
+		if key!= 0 newDictMap[key - 1] += val end
 	end
 	return newDictMap
 end
@@ -41,10 +41,6 @@ function partTwoFull(vals::Vector{Int64}, days::Int64)
 		firstMap = partTwoSingle(firstMap)
 	end
 	return firstMap
-end
-
-function dictSum(dictToSum::Dict{Int64, Int64})
-	return sum([val for (key,val) in dictToSum])
 end
 
 function main()
