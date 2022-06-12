@@ -1,6 +1,5 @@
 function readlinesComp(path::String)
-	lines = readlines(path)
-	lines = [split(line, " ") for line in lines]
+	lines = [split(line, " ") for line in readlines(path)]
 	lines = [(String(lines[i][1]), parse(Int64, lines[i][2])) for i in 1:length(lines)]
 	return lines
 end
