@@ -1,22 +1,10 @@
-function readlinesComp(path::String)
-	lines = readlines(path)
-	lines = [[parse(Int64, char) for char in line] for line in lines]
-	return lines
-end
+readlinesComp(path::String) = [[parse(Int64, char) for char in line] for line in readlines(path)]
 
-function mostCommon(column::Vector{Int64})
-	if sum(column) >= 0.5 * length(column) return 1 end 
-	return 0
-end
+fromBinToNum(bits::Vector{Int64}) = sum([bits[i]*2^(length(bits) - i) for i in 1:length(bits)])
 
-function mostCommonCO(column::Vector{Int64})
-	if sum(column) < 0.5 * length(column) return 1 end 
-	return 0
-end
+mostCommon(column::Vector{Int64}) = Int64(sum(column) >= 0.5 * length(column))
 
-function fromBinToNum(bits::Vector{Int64})
-	return sum([bits[i]*2^(length(bits) - i) for i in 1:length(bits)])
-end
+mostCommonCO(column::Vector{Int64}) = Int64(sum(column) < 0.5 * length(column))
 
 function gammaEpsilon(lines::Vector{Vector{Int64}})
 	cols = [[lines[i][col] for i in 1:length(lines)] for col in 1:length(lines[1])]
@@ -28,27 +16,22 @@ end
 function bitCriteria(numList::Vector{Vector{Int64}}, crit::Int64, col::Int64)
 	if crit == 1
 		if length(numList) == 1 return numList end
-		# println("OXY, $(length(numList)) number left")
 		mostCommonBit = mostCommon([numList[j][col] for j in 1:length(numList)])
-		return [line for line in numList if line[col]==mostCommonBit]
+		return filter(x->x[col]==mostCommonBit, numList)
 	end
 	if crit == 0
 		if length(numList) == 1 return numList end
-		# println("CO, $(length(numList)) number left")
 		mostCommonBit = mostCommonCO([numList[j][col] for j in 1:length(numList)])
-		return [line for line in numList if line[col]==mostCommonBit]
+		return filter(x->x[col]==mostCommonBit, numList)
 	end
 end
 
 function oxygenCO2(lines::Vector{Vector{Int64}})
 	firstCol = [lines[i][1] for i in 1:length(lines)]
 	mostCommonBitCurrOxy = mostCommon(firstCol)
-	oxyNums = [line for line in lines if line[1]==mostCommonBitCurrOxy]
-	CONums = [line for line in lines if line[1]!=mostCommonBitCurrOxy]
-	for i in 2:length(lines[1])
-		oxyNums = bitCriteria(oxyNums, 1, i)
-		CONums = bitCriteria(CONums, 0, i)
-	end
+	oxyNums = filter(x->x[1]==mostCommonBitCurrOxy, lines)
+	CONums = filter(x->x[1]!=mostCommonBitCurrOxy, lines)
+	for i in 2:length(lines[1]) oxyNums, CONums = bitCriteria(oxyNums, 1, i), bitCriteria(CONums, 0, i) end
 	return fromBinToNum(oxyNums[1]), fromBinToNum(CONums[1])
 end
 
