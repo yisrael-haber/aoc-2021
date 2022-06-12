@@ -1,48 +1,61 @@
+using StatsBase
+
 readInput(path::String) = [parse(Int64, val) for val in split(readlines(path)[1],",")]
 
-# function nextPlaySingle(num::Int64)
-# 	if num==0 return [6, 8] end
-# 	return [num - 1]
-# end
-
-# function nextPlayFull(fishSchool::Vector{Int64})
-# 	vecs = Vector{Int64}[]
-# 	for val in fishSchool vecs = vcat(vecs, nextPlaySingle(val)) end
-# 	return Vector{Int64}(vecs)
-# end
-
-# function runSim!(fishSchool::Vector{Int64}, stepNum::Int64)
-# 	for i in 1:stepNum
-# 		println("After $(i) days")
-# 		fishSchool = nextPlayFull(fishSchool)
-# 	end
-# 	return fishSchool
-# end
-
-function yup!(vals::Vector{Int64})
-	for idx in 1:length(vals)
-		if vals[idx] == 0
-			vals[idx] = 6 
-			push!(vals, 8)
-			continue
-		end
-		vals[idx] -= 1
+function operation(veccy::Vector{Int64})
+	dictMap, toSend = countmap(veccy), Vector{Int64}[]
+	for (key, val) in dictMap
+		if key == 0 toSend = vcat(toSend, [6 for i in 1:val], [8 for i in 1:val]) end
+		if key != 0 toSend = vcat(toSend, [key - 1 for i in 1:val]) end
 	end
+	return toSend
 end
 
-function yup2!(vals::Vector{Int64}, days::Int64)
+
+function partOne(veccy::Vector{Int64}, days::Int64)
 	for i in 1:days
-		println("After $(i) days")
-		yup!(vals)
+		println("Part 1: after $(i) days")
+		veccy = operation(Vector{Int64}(veccy))
 	end
+	return length(veccy)
+end
+
+function partTwoSingle(vals::Dict{Int64, Int64})
+	newDictMap = Dict(key=>0 for key in 0:8)
+	for (key, val) in vals
+		if key == 0
+			newDictMap[6] += val
+			newDictMap[8] += val
+		end
+		if key!= 0
+			newDictMap[key - 1] += val
+		end
+	end
+	return newDictMap
+end
+
+function partTwoFull(vals::Vector{Int64}, days::Int64)
+	firstMap = countmap(vals)
+	for i in 1:days
+		println("Part 2: doing day $(i)")
+		firstMap = partTwoSingle(firstMap)
+	end
+	return firstMap
+end
+
+function dictSum(dictToSum::Dict{Int64, Int64})
+	return sum([val for (key,val) in dictToSum])
 end
 
 function main()
 	vals = readInput("sixthDayInput.txt")
 
+	# First part
+	vals1 = partOne(vals, 80)
+	println("Answer for first part is $(vals1)")
+
 	# first part
-	yup2!(vals, 80)
-	println("Answer for first part $(length(vals))")
+	println("Answer for first part $(dictSum(partTwoFull(vals, 256)))")
 end
 
 main()
