@@ -8,7 +8,7 @@ specSum(num::Int64) = Int64((num+1)*(num/2))
 
 function updateDists(veccy::Vector{Int64}, idx1::Int64)
 	val1, val2 = veccy[idx1], veccy[idx1+1]
-	for id in 1:length(veccy) if id <= idx1 veccy[id] += (val2 - val1) else veccy[id] -= (val2 - val1) end end
+	for id in 1:length(veccy); if id <= idx1; veccy[id] += (val2 - val1); else veccy[id] -= (val2 - val1) end end
 	return veccy
 end
 
@@ -19,7 +19,7 @@ function firstPart(sortedVals::Vector{Int64})
 	for idx in 1:(length(sortedVals)-1)
 		nextDists = updateDists(currDists, idx)
 		nextFuel = sum([abs(val) for val in nextDists])
-		if nextFuel > currFuel return currFuel end
+		if nextFuel > currFuel; return currFuel end
 		currFuel = nextFuel
 	end
 end
@@ -31,7 +31,7 @@ function secondPart(sortedVals::Vector{Int64})
 	for idx in 1:(length(sortedVals)-1)
 		nextDists = updateDists(currDists, idx)
 		nextFuel = sum([specSum(abs(val)) for val in nextDists])
-		if nextFuel > currFuel return currFuel end
+		if nextFuel > currFuel; return currFuel end
 		currFuel = nextFuel
 	end	
 end
