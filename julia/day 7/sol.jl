@@ -1,5 +1,3 @@
-using StatsBase
-
 readInput(path::String) = sort([parse(Int64, val) for val in split(readlines(path)[1],",")])
 
 dist(val1::Int64, val2::Int64) = abs(val1 - val2)
